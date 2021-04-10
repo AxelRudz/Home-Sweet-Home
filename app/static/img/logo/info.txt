@@ -1,0 +1,14 @@
+
+Hope you enjoy your new logo, here are the people that
+made your beautiful logo happen :)
+font name: Jellee-Roman
+font link: https://hanken.co/product/jellee/
+font author: Hanken Design Co.
+font author site: https://hanken.co/
+
+
+icon designer: Jeremy J Bristol
+icon designer link: /jeremy.j.bristol
+        
+{"bg":"#DCE5FC","icon-gradient-0":"#0015D6","icon-gradient-1":"#0989FB","font":"#041F57","slogan":"#18336b"}
+      

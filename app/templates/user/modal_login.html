@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div class="modal fade" id="modal_login" tabindex="-1" aria-labelledby="modal_login_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal_login_label">Iniciar sesión</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{url_for('user_login')}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <div class="modal-body">
+          <img id="logo-modal" href="#" src="{{url_for('static', filename='img/logo/logo-png.png')}}">
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input id="email" name="email" type="email" class="form-control" placeholder="Escribe tu email..." required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input id="password" name="password" type="password" class="form-control" placeholder="Escribe tu contraseña..." required>
+          </div>
+        </div>
+        <div class="text-centered" style="margin-bottom: 30px;">
+          No tienes una cuenta?<a href="{{url_for('user_register')}}" style="margin-left: 5px;">Registrate gratis!</a>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn white-text" style="background-color: #041f57;">Iniciar sesión</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

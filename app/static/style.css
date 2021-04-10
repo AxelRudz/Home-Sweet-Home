@@ -1,0 +1,208 @@
+body {
+  background: url("./img/background.jpg") fixed no-repeat;
+  background-size: cover;
+}
+
+header {
+  padding-top: 20px;
+  margin-bottom: 50px;
+}
+
+.nav-item {
+  color: white;
+  padding: 20px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  color:rgb(0, 104, 196);
+}
+
+.nav-item a{
+  text-decoration: none;
+  color: white;
+  font-size: large;
+  transition: 0.2s;
+}
+
+.nav-item a:hover {
+  color: rgb(0, 104, 196);
+}
+
+.section-casas {
+  padding: 30px 40px;
+  padding-bottom: 60px;
+  background-color: rgba(0, 104, 196, 0.8);
+  border-radius: 5px;
+  margin-bottom: 60px;
+  min-height: 350px;
+}
+
+.section-header {
+  margin: 20px;
+  margin-top: 0px;
+  color: white;
+  border-bottom: 3px solid white;
+  padding-bottom: 10px;
+}
+
+.bloque-casa {
+  width: 280px;
+  margin: 10px;
+}
+
+.foto-casa {
+  background-color: #1e1e1e;
+  background-position: top;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 280px;
+  height: 200px;
+  border-radius: 5px 5px 0px 0px;
+  margin-bottom: 0px;
+}
+
+.descripcion-casa {
+  color: white;
+  width: 280px;
+  margin: 5px;
+  font-style: italic;
+  text-align: left;
+}
+
+.like-bar {
+  width: 280px;
+  height: 260px;
+  text-align: right;
+  border-radius: 0px 0px 5px 5px;
+  color: white;
+  background-color: #1e1e1e;
+  padding: 10px;
+}
+
+.like {
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  color: white;
+  border-radius: 5px;
+  background-color: rgb(47, 167, 0);
+  padding: 0px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  padding: 5px;
+}
+
+.like:hover {
+  color: rgb(0, 100, 0);
+  background-color: rgb(56, 197, 0);
+}
+
+.dislike {
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  color: white;
+  border-radius: 5px;
+  background-color: rgb(165, 0, 0);
+  padding: 0px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  padding: 5px;
+}
+
+.dislike:hover {
+  color: rgb(80, 0, 0);
+  background-color: rgb(197, 0, 0);
+}
+
+.old-price {
+  text-decoration: line-through; 
+  color: red;
+  margin-right: 12px;
+}
+
+.actual-price {
+  color: #2fa700;
+}
+
+.fa-fire {
+  color: rgb(255, 72, 0); 
+  margin-right: 2px;
+}
+
+.num-likes {
+  margin-right: 5px;
+}
+
+.btn-section {
+  display: block;
+  text-align: center;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: 0.2s;
+  text-decoration: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  background-color: #041f57;
+  margin: 2px auto;
+}
+
+.btn-section:hover {
+  color: white;
+  background-color: #052d7e;
+}
+
+.not-availeable-houses {
+  text-align: center;
+  color: white;
+  padding: 80px 10px;
+}
+
+.fa-star {
+  color: rgb(218, 185, 0);
+  margin-bottom: 20px;
+}
+
+#logo-modal {
+  display: block;
+  height: 50px; 
+  margin: 20px auto;
+}
+
+.show-house {
+  position: relative; 
+  float: left;
+  color: white;
+  padding: 5px 10px;
+  background-color: #041f57;
+  border: 1px solid #041f57;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+.show-house:hover {
+  background-color: #072d79;
+  border: 1px solid #072d79;
+}
+
+.btn-fav-sm {
+  border: none;
+  position: absolute; 
+  background-color: rgba(0,0,0,0.4); 
+  border-radius: 0px 0px 10px 0px;
+}
+
+.btn-fav-sm:focus {
+  outline: 0;
+}
+
+.white-text {
+  color: rgb(255, 255, 255);
+}
+
+.text-centered {
+  text-align: center;
+}

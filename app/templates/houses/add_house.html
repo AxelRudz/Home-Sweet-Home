@@ -1,0 +1,257 @@
+{% extends "layout.html" %}
+{% block title %}HSH - Vender propiedad{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    #form-add-house {
+      color: white;
+      margin: 20px auto;
+      padding: 20px 50px;
+      background-color: rgba(0, 104, 196, 0.7);
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+    }
+
+    #form-add-house .form-field {
+      max-width: 600px;
+      margin: 0px auto;
+      margin-bottom: 40px;
+    }
+
+    #form-btn {
+      width: 250px;
+      margin: 0px auto;
+      color: white;
+      background-color: #041f57;
+      transition: 0.2s;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: larger;
+    }
+
+    #form-btn:hover {
+      background-color: #052a74;
+    }
+
+    #form-add-house .preview-photo {
+      background-color: #1e1e1e;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: inline-block;
+      width: 270px;
+      height: 180px;
+      border-radius: 20px;
+      box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-blue {
+      font-size: small;
+      color: #041f57;
+    }
+
+    #on_sale {
+      background-color: #eee
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    #div-checkbox {
+      width: fit-content;
+      padding: 10px 20px;
+      margin: 20px auto 40px auto;
+      font-size: larger; 
+      border: none;
+      border-radius: 40px;
+      box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.2);
+      background-color: #041f57;
+    }
+
+    #div-checkbox label {
+      cursor: pointer;
+    }
+
+    #pic-list {
+      display: block;
+      width: fit-content;
+      margin: 20px auto;
+      padding: 0px;
+      list-style-type: none;
+    }
+
+    #pic-list li {
+      margin: 20px 5px;
+      display: inline-block;
+    }
+
+    #pic-list .main-block {
+      border: 5px solid #021d53;
+      background-color: #021d53;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 15px;
+    }
+
+    #logo-form-add-house {
+      height: 65px;
+      margin: 20px auto 60px auto;
+      display: block;
+    }
+
+    .danger-span {
+      color: rgb(184, 0, 0);
+    }
+
+    .input-price {
+      max-width: 600px;
+      margin: 0px auto;
+    }
+
+    #photo {
+      display: block; 
+      margin: 30px auto;
+    }
+
+  </style>
+{% endblock %}
+{% block content %}
+
+  <form id="form-add-house" action="{{url_for('create_house')}}" method="POST" onsubmit="return validate_prices();" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <img id="logo-form-add-house" class="img-fluid" src="{{url_for('static', filename='img/logo/vector/default-monochrome-white.svg')}}" alt="Logo">
+    {% if is_authenticated(session) %}
+      <input type="number" name="id_user" value="{{session.user.id}}" hidden>
+    {% endif %}
+    <label for="name" class="form-label">Nombre de la propiedad <span class="danger-span">*</span></label>
+    <input type="text" id="name" name="name" class="form-control form-field" placeholder="Nombre..." maxlength="40" required>
+
+    <label for="adress" class="form-label">Dirección <span class="danger-span">*</span></label>
+    <input type="text" id="adress" name="adress" class="form-control form-field" placeholder="Dirección..." maxlength="40" required>
+
+    <label for="description" class="form-label">Descripción</label>
+    <textarea id="description" name="description" rows="4" cols="50" class="form-control form-field" placeholder="Descripción..."></textarea>
+
+    <label id="label-actual-price" for="actual_price" class="form-label">Precio</label>
+    <span class="custom-blue">(En dólares)</span>
+    <div class="input-group mb-3 input-price">
+      <span class="input-group-text">$</span>
+      <input type="number" id="actual_price" name="actual_price" class="form-control" placeholder="Precio..." max="999999999">
+    </div>
+
+    <div id="div-old-price" hidden>
+      <label for="old_price" class="form-label">Precio anterior</label>
+      <span class="custom-blue">(En dólares)</span>
+      <div class="input-group mb-3 input-price">
+        <span class="input-group-text">$</span>
+        <input type="number" id="old_price" name="old_price" class="form-control" placeholder="Precio..." max="999999999">
+      </div>
+    </div>
+
+    <div id="div-checkbox">
+      <input type="checkbox" id="on_sale" name="on_sale" class="mr-8" onchange="toggle_price(this)">
+      <label for="on_sale">En oferta</label>
+    </div>
+
+    
+    <input type="file" id="photo" name="photo" accept="image/*" multiple onchange="add_pic(this)">
+    <p id="files-uploaded" class="white-text">No hay ninguna foto seleccionada</p>
+    <ul id="pic-list">
+      <img class="preview-photo" style="background-color: transparent;" src="{{url_for('static', filename='img/no-image.png')}}" alt="No hay imagen seleccionada">
+    </ul>
+    <button id="form-btn" type="submit" class="btn">Agregar propiedad</button>
+  </form>
+  <script>
+
+    function add_pic(input){
+      $("#pic-list").empty();
+      if (input.files.length == 0){
+        $("#pic-list").append(
+          '<img class="preview-photo" style="background-color: transparent" src="static/img/no-image.png" alt="No hay imagen seleccionada">'
+        );
+        document.getElementById("files-uploaded").innerText = "No hay ninguna foto seleccionada";
+      }
+      else {
+        $("#pic-list").append(
+          "<li class='main-block'><span style='display: block;'>Portada</span><div onclick='select(0)' style='background-image: url("+window.URL.createObjectURL(input.files[0])+");border-radius: 0px 0px 15px 15px;' class='preview-photo'></div></li>"
+        );
+
+        if(input.files.length > 1){
+          for (var i=1; i < input.files.length; i++){
+            $("#pic-list").append(
+              "<li><div onclick='select("+i+")' class='preview-photo' style='background-image:url("+window.URL.createObjectURL(input.files[i])+");'></div></li>"
+            );
+            document.getElementById("files-uploaded").innerText = "Hay " + input.files.length + " fotos seleccionadas";
+          }
+        }
+        else{
+          document.getElementById("files-uploaded").innerText = "Hay 1 foto seleccionada";
+        }
+      }
+    }
+
+    function toggle_price(checkbox){
+      if(checkbox.checked){
+        document.getElementById("label-actual-price").innerHTML = "Precio actual";
+      }
+      else{
+        document.getElementById("label-actual-price").innerHTML = "Precio";
+      }
+      document.getElementById("div-old-price").hidden = !document.getElementById("div-old-price").hidden;
+    }
+
+    function is_valid(field){
+      if(field == "" || field == null || isNaN(field)){
+        return false
+      }
+      return true
+    }
+
+    function validate_prices(){
+
+      var actual_price = $("#actual_price").val();
+      var old_price    = $("#old_price").val();
+      var on_sale      = $("#on_sale").prop("checked");
+
+      if(on_sale == null || on_sale != true){
+        on_sale = false;
+      }
+      if(on_sale){
+        if(!(is_valid(actual_price)) || !(is_valid(old_price))){
+          alert("El precio es inválido!");
+          return false;
+        }
+        if(parseInt(actual_price) >= parseInt(old_price)){
+          alert("El precio actual debe ser más económico!");
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function select(number_of_picture){
+
+      var photos = document.getElementById("photo");
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(photos.files[number_of_picture]);
+      for (var x = 0; x < photos.files.length; x++){
+        if(x != number_of_picture){
+          dataTransfer.items.add(photos.files[x]);
+        }
+      }
+      photos.files = dataTransfer.files;
+      add_pic(document.getElementById("photo"));
+
+    }
+  </script>
+{% endblock %}

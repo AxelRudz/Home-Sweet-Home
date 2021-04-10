@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% block title %}Registrar usuario{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    #form-register {
+      color: white;
+      margin: 20px auto;
+      padding: 20px 50px;
+      border-radius: 20px;
+      background-color: rgba(0, 104, 196, 0.7);
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    #form-register .register-field {
+      margin: 0px auto;
+      margin-bottom: 40px;
+    }
+
+    #register-btn {
+      width: 350px;
+      margin: 20px auto;
+      color: white;
+      background-color: #041f57;
+      transition: 0.2s;
+    }
+
+    #register-btn:hover {
+      background-color: #052a74;
+    }
+
+    #form-register img {
+      height: 65px;
+      margin: 20px auto 60px auto;
+    }
+
+    .custom-blue {
+      font-size: small;
+      color: #041f57;
+    }
+
+  </style>
+{% endblock %}
+{% block content %}
+
+  <form id="form-register" action="{{url_for('user_create')}}" method="POST" onsubmit="return validate_form();">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <div class="row">
+      <img src="{{url_for('static', filename='img/logo/vector/default-monochrome-white.svg')}}" alt="Logo">
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-4">
+        <label for="email" class="form-label">Correo electrónico</label>
+        <input type="email" id="email" name="email" class="form-control register-field" placeholder="nombre@ejemplo.com" required>
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" id="first_name" name="first_name" class="form-control register-field" placeholder="Nombre..." required>
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input type="text" id="last_name" name="last_name" class="form-control register-field" placeholder="Apellido..." required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-4">
+        <label for="phone_number" class="form-label">Teléfono</label>
+        <input type="text" id="phone_number" name="phone_number" class="form-control register-field" placeholder="codArea - numero" required>
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" id="password1" name="password1" class="form-control register-field" placeholder="Contraseña..." required>
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <label for="password2" class="form-label">Repita la contraseña</label>
+        <input type="password" id="password2" name="password2" class="form-control register-field" placeholder="Repita la contraseña..." required>
+      </div>
+    </div>
+    <div class="row">
+      <button id="register-btn" type="submit" class="btn">Registrarse</button>
+    </div>
+  </form>
+
+  <script>
+    function validate_form(){
+      if (document.getElementById("password1").value != document.getElementById("password2").value){
+        document.getElementById("list-flash").innerHTML = 
+          '<div class="alert alert-danger" role="alert">Las contraseñas no coinciden</div>';
+        return false
+      }
+      else {
+        return true
+      }
+    }
+  </script>
+{% endblock %}

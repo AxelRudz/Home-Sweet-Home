@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}HSH - Home{% endblock %}
+{% block head %}
+  {{ super() }}
+
+  <!-- Add Open Graph fields-->
+  <meta property="og:url" content="http://axelrudz.pythonanywhere.com" />
+  <meta property="og:title" content="Home Sweet Home" />
+  <meta property="og:image" content="http://axelrudz.pythonanywhere.com/static/img/logo/default.png" />
+
+  <style>
+    .btn-add-house {
+      background-color: #045708;
+    }
+
+    .btn-add-house:hover {
+      color: white;
+      background-color: #05750a;
+    }
+
+  </style>
+{% endblock %}
+{% block content %}
+
+<section class="section-casas">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-8">
+      <h2 class="section-header">Últimas propiedades agregadas!</h2>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-2">
+      {% if is_authenticated(session) %}
+        <a href="{{url_for('add_house')}}" class="btn-section btn-add-house"><i class="fas fa-home"></i> Agregar una publicación</a>
+      {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-2">
+      <a href="{{url_for('show_all_houses')}}" class="btn-section"><i class="fas fa-search"></i> Ver todas las propiedades...</a>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-center">
+    {% if not last_houses %}
+      <h1 class="not-availeable-houses">Actualmente no hay propiedades disponibles</h1>
+    {% endif %}
+    {% for house in last_houses %}
+      {% include "houses/block_house.html" %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section-casas">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-8">
+      <h2 class="section-header"><i class="fas fa-fire"></i> Las mejores ofertas!</h2>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-2">
+      {% if is_authenticated(session) %}
+        <a href="{{url_for('add_house')}}" class="btn-section btn-add-house"><i class="fas fa-home"></i> Agregar una publicación</a>
+      {% endif %}
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-2">
+      <a href="{{url_for('show_sales')}}" class="section-header btn-section"><i class="fas fa-fire"></i> Ver todas las ofertas...</a>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-center">
+    {% if not on_sale_houses%}
+      <h1 class="not-availeable-houses">Actualmente no hay ofertas disponibles</h1>
+    {% endif %}
+    {% for house in on_sale_houses %}
+      {% include "houses/block_house.html" %}
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

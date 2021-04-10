@@ -1,0 +1,250 @@
+{% extends "layout.html" %}
+{% block title %}HSH - {{house.name}}{% endblock %}
+{% block head %}
+  {{ super() }}
+
+  <!--Add metadate of Open Graph from layout.html-->
+  <meta property="og:url" content="http://axelrudz.pythonanywhere.com/show-house?id={{house.id}}" />
+  <meta property="og:title" content="{{house.name}} - Home Sweet Home" />
+  {% if (house.has_picture) %}
+    <meta property="og:image" content="http://axelrudz.pythonanywhere.com/static/uploads/foto-casa-{{house.id}}-1" />
+  {% else %}
+    <meta property="og:image" content="http://axelrudz.pythonanywhere.com/static/img/logo/default.png" />
+  {% endif %}
+
+  <style>
+
+    #description {
+      color: black;
+      background-color: white;
+      border-radius: 5px;
+    }
+
+    #btn-buy {
+      padding: 20px 50px;
+      margin: 20px auto;
+      background-color: #2fa700;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    #btn-buy:hover {
+      background-color: #38c500;
+    }
+
+
+    #div-info {
+      background-color: #042057;
+      border-radius: 0px 0px 20px 20px;
+      padding: 20px; 
+      max-width: 800px;
+      margin: 0px auto;
+      margin-bottom: 40px;
+      border-right: 1px solid rgba(0, 0, 0, 0.5);
+      border-left: 1px solid rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    }
+
+    #carouselHouseControls {
+      max-width: 800px;
+      margin: 0px auto;
+    }
+
+    #carouselHouseControls button {
+      margin: auto;
+      border: none;
+      background-color: transparent;
+    }
+
+    #carouselHouseControls .control-prev, 
+    #carouselHouseControls .control-next {
+      font-size: 40px;
+      color: white;
+      width: fit-content;
+      height: fit-content;
+      opacity: 0.8;
+      border-radius: 6px;
+    }
+
+    .carousel-control-next, .carousel-control-prev {
+      opacity: 1;
+    }
+
+    #btn-fav {
+      width: 250px;
+      padding: 10px 20px;
+      display: inline-block;
+    }
+
+    #btn-remove {
+      width: 200px;
+      padding: 10px 20px;
+      background-color: #a50000;
+    }
+
+    .picture {
+      background-size: cover;
+      background-position: center;
+      background-color: #042057;
+      background-repeat: no-repeat;
+      height: 500px;
+      border-radius: 15px 15px 0px 0px; 
+      width: 100%;
+      margin-top: 40px;
+    }
+
+    @media(max-width: 767px){
+      .picture {
+        height: 200px;
+      }
+      #btn-fav {
+        text-align: center;
+        width: 200px;
+      }
+      #btn-remove {
+        width: 200px;
+      }
+      .btn-thumb {
+        width: 80px !important;
+      }
+      #carouselHouseControls .control-prev, 
+      #carouselHouseControls .control-next {
+        font-size: 30px;
+      }
+    }
+
+    .btn-thumb {
+      width: 200px; 
+      padding: 10px 5px;
+    }
+
+  </style>
+{% endblock %}
+{% block content %}
+  {% if house %}
+  <section class="section-casas white-text">
+    <div class="text-centered">
+      <h2 style="margin-bottom: 20px;">{{house.name}}</h2>
+      {% if is_authenticated(session) %}
+        {% if not was_sold(house.id) %}
+          {% if is_favorite(house.id)%}
+            <button id="btn-fav" onclick="add_to_fav('/add-fav-house','{{session.user.id}}', '{{house.id}}', '{{csrf_token()}}')" class="btn btn-section"><i style="margin: 5px;" class="fas fa-star"></i>Eliminar de favoritos</button>
+          {% else %}
+            <button id="btn-fav" onclick="add_to_fav('/add-fav-house','{{session.user.id}}', '{{house.id}}', '{{csrf_token()}}')" class="btn btn-section"><i style="margin: 5px;" class="fas fa-star"></i>Añadir a favoritos</button>
+          {% endif %}
+          {% if user_is_owner(house.id) %}
+            <form action="{{url_for('delete_house')}}" onsubmit="return confirm('Está seguro de eliminar esta publicación?');" method="POST" style="display: inline-block;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <input type="number" name="id_house" value="{{house.id}}" hidden>
+              <button type="submit" class="btn btn-section" id="btn-remove" style="display: inline-block;"><i style="margin: 5px;" class="fas fa-trash-alt"></i>Eliminar</button>
+            </form>
+          {% endif %}
+        {% endif %}
+      {% else %}      
+        <!-- Button trigger modal login -->
+        <a data-bs-toggle="modal" data-bs-target="#modal_login">
+          <button id="btn-fav" class="btn btn-section"><i style="margin: 5px;" class="fas fa-star"></i>Añadir a favoritos</button>
+        </a>
+      {% endif %}
+
+      <div id="carouselHouseControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% if (house.has_picture) %}
+            {% for i in range(1, house.has_picture+1) %}
+              {% set route = "uploads/foto-casa-"~house.id+"-"~i %}
+              {% set route2 = url_for('static', filename=route) %}
+              {% if i == 1%}
+                <div class="carousel-item active">
+              {% else %}
+                <div class="carousel-item">
+              {% endif %}
+                <div class="picture img-fluid" style="background-image: url({{route2}});" alt="Foto de {{house.name}}"></div>
+              </div>
+            {% endfor %}          
+          {% else %}
+            <div class="carousel-item active">
+              {% set route = url_for('static', filename="img/no-image.png") %}
+              <div class="picture img-fluid" style="background-image: url({{route}});" alt="Foto de {{house.name}}"></div>
+            </div>
+          {% endif %}
+        </div>
+        {% if (house.has_picture > 1) %}
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselHouseControls"  data-bs-slide="prev">
+            <span class="control-prev img-fluid"><i class="far fa-arrow-alt-circle-left"></i></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselHouseControls"  data-bs-slide="next">
+            <span class="control-next img-fluid"><i class="far fa-arrow-alt-circle-right"></i></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        {% endif %}
+      </div>
+
+      <div id="div-info">
+        <h2 style="width: fit-content; margin: 0px auto;" class="descripcion-casa house-{{house.id}}-stars text-centered">
+          {% if (house.stars == 0) %}
+            Sin valoración<i class="fas fa-star" style="color: transparent;"></i>
+          {% else %}
+            {% for star in range(house.stars) %}
+              <i class="fas fa-star"></i>
+            {% endfor %}
+          {% endif %}
+        </h2>
+        <div style="margin: 12px 0px;">
+          <button
+            {% if is_authenticated(session) %}
+              onclick="rate('/add-like', '{{session.user.id}}', '{{house.id}}', '{{ csrf_token()}}')"
+            {% else %}
+              data-bs-toggle="modal" data-bs-target="#modal_login"
+            {% endif %}
+            class="like btn-thumb" title="Agregar like"><span class="likes-house-{{house.id}}" class="num-likes">{{house.likes}} </span><i class="fas fa-thumbs-up"></i>
+          </button>
+          <button
+            {% if is_authenticated(session) %}
+              onclick="rate('/add-dislike', '{{session.user.id}}', '{{house.id}}', '{{ csrf_token()}}')"
+            {% else %}
+              data-bs-toggle="modal" data-bs-target="#modal_login"
+            {% endif %}
+            class="dislike btn-thumb" title="Agregar dislike"><span class="dislikes-house-{{house.id}}" class="num-likes">{{house.dislikes}} </span><i class="fas fa-thumbs-down"></i>
+          </button>
+        </div>
+
+        
+      </div>
+    </div>
+    <hr style="margin: 60px auto;">
+    <h4><i class="fas fa-map-marked-alt"></i> {{house.adress}}</h4>
+    <h4><i class="fas fa-phone-alt"></i> {{phone(house.owner_id)}}</h4>
+    {% if house.old_price %}
+      <h4>
+        <span style="display: block;">Antes: <span class="old-price">USD {{ '{0:,}'.format(house.old_price) }}</span></span>
+        <span style="display: block;">Ahora: <span class="actual-price">USD {{ '{0:,}'.format(house.actual_price) }}</span></span>
+      </h4>
+    {% else %}
+      {% if house.actual_price %}
+        <h4><i class="fas fa-dollar-sign"></i>{{house.actual_price}}</h4>
+      {% else %}
+        <h4><i class="fas fa-dollar-sign"></i> Consultar precio</h4>
+      {% endif %}
+    {% endif %}
+      
+    {% if house.description %}
+      <h4 class="white-text"><i class="fas fa-info-circle"></i> Información:</h4>
+      <textarea id="description" name="description" rows="5" cols="50" class="form-control form-field pd-4" readonly>{{house.description}}</textarea>
+    {% endif %}
+    <hr style="margin: 60px auto;">
+    {% if not was_sold(house.id) %}
+      {% if is_authenticated(session) %}
+        <form action="{{url_for('buy_house')}}", method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <input type="number" name="id_house" value="{{house.id}}" hidden>
+          <button type="submit" class="btn btn-section" id="btn-buy" style="margin: 50px auto; display: block;">Comprar ahora!</button>
+        </form>
+      {% else %}
+        <a data-bs-toggle="modal" data-bs-target="#modal_login">
+          <button type="submit" class="btn btn-section" id="btn-buy" style="margin: 50px auto; display: block;">Comprar ahora!</button>
+        </a>
+      {% endif %}
+    {% endif %}
+  </section>
+  {% endif %}
+{% endblock %}

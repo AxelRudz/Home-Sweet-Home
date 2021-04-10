@@ -1,0 +1,72 @@
+<div title="{{house.name}}" class="bloque-casa col-sm-12 col-md-6 col-lg-3">
+    {% if is_authenticated(session) %}
+        {% if not was_sold(house.id) %}
+            {% if is_favorite(house.id)%}
+                <button class="btn-fav-sm btn-fav-house-{{house.id}}" onclick="add_to_fav_from_block('/add-fav-house','{{session.user.id}}', '{{house.id}}', '{{csrf_token()}}')">
+                    <i style="font-size: 25px; margin: 5px;" class="fas fa-star"></i>
+                </button>
+            {% else %}
+                <button class="btn-fav-sm btn-fav-house-{{house.id}}" onclick="add_to_fav_from_block('/add-fav-house','{{session.user.id}}', '{{house.id}}', '{{csrf_token()}}')">
+                    <i style="font-size: 25px; margin: 5px; color: white;" class="fas fa-star"></i>
+                </button>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    {% if (house.has_picture) %}
+        {% set route = "uploads/foto-casa-"~house.id+"-1" %}
+        {% set route2 = url_for('static', filename=route) %}
+        <div class="foto-casa" style="background-image: url({{route2}});" alt="Foto de {{house.name}}"></div>
+    {% else %}
+        <img class="foto-casa" src="{{url_for('static', filename='img/no-image.png')}}" alt="Foto de {{house.name}}" style="background-color: rgba(0,0,0,0.4);">
+    {% endif %}
+    <div class="like-bar">
+        <p class="descripcion-casa house-{{house.id}}-stars">
+        {% if (house.stars == 0) %}
+            <!-- The star is transparent to keep the same relation-->
+            Sin valoración<i class="fas fa-star" style="color: transparent;"></i>
+        {% else %}
+            {% for star in range(house.stars) %}
+                <i class="fas fa-star"></i>
+            {% endfor %}
+        {% endif %}
+        </p>
+        <p class="descripcion-casa"><i class="fas fa-home"></i> {{house.name}}</p>
+        <p class="descripcion-casa"><i class="fas fa-map-marked-alt"></i> {{house.adress}}</p>
+        <p class="descripcion-casa"><i class="fas fa-phone-alt"></i> {{phone(house.owner_id)}}</p>
+        {% if house.old_price %}
+            <p class="descripcion-casa">
+                <span class="old-price">USD {{ '{0:,}'.format(house.old_price) }}</span><br>
+                <i class="fas fa-fire"></i>
+                <span class="actual-price">USD {{ '{0:,}'.format(house.actual_price) }}</span>
+            </p>
+        {% else %}
+            {% if house.actual_price %}
+                <p class="descripcion-casa">USD {{ '{0:,}'.format(house.actual_price) }}</p><br>
+            {% else %}
+                <p class="descripcion-casa">Consultar precio</p><br>
+            {% endif %}
+        {% endif %}
+        <div style="margin: 12px 0px;">
+            <form action="{{url_for('show_house', house=house)}}" method="GET">
+                <input type="hidden" name="id" value="{{house.id}}"/>
+                <button type="submit" class="show-house">Ver propiedad</button>
+            </form>
+            <button
+                {% if is_authenticated(session) %}
+                    onclick="rate('/add-like', '{{session.user.id}}', '{{house.id}}', '{{ csrf_token()}}')"
+                {% else %}
+                    data-bs-toggle="modal" data-bs-target="#modal_login"
+                {% endif %}
+                class="like" title="Agregar like"><span class="likes-house-{{house.id}}" class="num-likes">{{house.likes}} </span><i class="fas fa-thumbs-up"></i>
+            </button>
+            <button
+                {% if is_authenticated(session) %}
+                    onclick="rate('/add-dislike', '{{session.user.id}}', '{{house.id}}', '{{ csrf_token()}}')"
+                {% else %}
+                    data-bs-toggle="modal" data-bs-target="#modal_login"
+                {% endif %}
+                class="dislike" title="Agregar dislike"><span class="dislikes-house-{{house.id}}" class="num-likes">{{house.dislikes}} </span><i class="fas fa-thumbs-down"></i>
+            </button>
+        </div>
+    </div>
+</div>

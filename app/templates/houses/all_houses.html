@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}HSH - {{title}}{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    #btn-add-house {
+      background-color: #045708;
+    }
+
+    #btn-add-house:hover {
+      color: white;
+      background-color: #05750a;
+    }
+
+  </style>
+{% endblock %}
+{% block content %}
+<section class="section-casas">
+  <h2 class="section-header">{{title}}</h2>
+  <div class="row d-flex justify-content-start">
+    {% if not houses %}
+      <h1 class="not-availeable-houses">Actualmente no hay propiedades disponibles</h1>
+    {% endif %}
+    {% for house in houses %}
+      {% include "houses/block_house.html" %}
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
