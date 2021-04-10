@@ -16,8 +16,8 @@ This is a simple web application that I made as an example. There are many thing
 $ virtualenv -p python3 venv
 $ . venv/bin/activate
 $ pip install -r requirements.txt
-$ FLASK_ENV=development
-$ FLASK_APP=run.py
+$ export FLASK_ENV=development
+$ export FLASK_APP=run.py
 $ flask run
 ```
 
