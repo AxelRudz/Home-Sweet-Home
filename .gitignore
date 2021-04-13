@@ -111,5 +111,7 @@ flask_session
 coc-settings.json
 .vscode
 
+#PyCharm
+.idea/
 #Path where houses pictures are uploaded
 app/static/uploads/
