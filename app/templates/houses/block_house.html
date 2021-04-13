@@ -12,13 +12,19 @@
             {% endif %}
         {% endif %}
     {% endif %}
-    {% if (house.has_picture) %}
-        {% set route = "uploads/foto-casa-"~house.id+"-1" %}
-        {% set route2 = url_for('static', filename=route) %}
-        <div class="foto-casa" style="background-image: url({{route2}});" alt="Foto de {{house.name}}"></div>
-    {% else %}
-        <img class="foto-casa" src="{{url_for('static', filename='img/no-image.png')}}" alt="Foto de {{house.name}}" style="background-color: rgba(0,0,0,0.4);">
-    {% endif %}
+    <form action="{{url_for('show_house', house=house)}}" method="GET" style="height:200px;">
+        <input type="hidden" name="id" value="{{house.id}}"/>
+        <button class="btn-block-picture" type="submit">
+            {% if (house.has_picture) %}
+                {% set route = "uploads/foto-casa-"~house.id+"-1" %}
+                {% set full_route = url_for('static', filename=route) %}
+            {% else %}
+                {% set full_route = url_for('static', filename='img/no-image.png') %}
+            {% endif %}
+            <div class="foto-casa" style="background-image: url({{full_route}});" alt="Foto de {{house.name}}"></div>
+        </button>
+    </form>
+    
     <div class="like-bar">
         <p class="descripcion-casa house-{{house.id}}-stars">
         {% if (house.stars == 0) %}

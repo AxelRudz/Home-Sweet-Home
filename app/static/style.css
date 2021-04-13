@@ -206,3 +206,13 @@ header {
 .text-centered {
   text-align: center;
 }
+
+.btn-block-picture {
+  border: none; 
+  padding: 0px;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.btn-block-picture:focus {
+  outline: none;
+}
