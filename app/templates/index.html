@@ -30,6 +30,8 @@
     <div class="col-sm-12 col-md-12 col-lg-2">
       {% if is_authenticated(session) %}
         <a href="{{url_for('add_house')}}" class="btn-section btn-add-house"><i class="fas fa-home"></i> Agregar una publicación</a>
+      {% else %}
+        <a href="#" data-bs-toggle="modal" data-bs-target="#modal_login" class="btn-section btn-add-house"><i class="fas fa-home"></i> Agregar una publicación</a>
       {% endif %}
     </div>
     <div class="col-sm-12 col-md-12 col-lg-2">
@@ -54,6 +56,8 @@
     <div class="col-sm-12 col-md-12 col-lg-2">
       {% if is_authenticated(session) %}
         <a href="{{url_for('add_house')}}" class="btn-section btn-add-house"><i class="fas fa-home"></i> Agregar una publicación</a>
+      {% else %}
+        <a href="#" data-bs-toggle="modal" data-bs-target="#modal_login" class="btn-section btn-add-house"><i class="fas fa-home"></i> Agregar una publicación</a>
       {% endif %}
     </div>
     <div class="col-sm-12 col-md-12 col-lg-2">
