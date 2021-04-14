@@ -249,3 +249,8 @@ def delete_house():
     
     return redirect(request.referrer)
     
+
+def restore_houses():
+    conn = connection()
+    House.restore_houses(conn)
+    return redirect (url_for('index'))

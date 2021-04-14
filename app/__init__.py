@@ -53,6 +53,7 @@ def create_app(environment="development"):
     app.add_url_rule("/show-sales", "show_sales", house.show_sales)
     app.add_url_rule("/add-like", "add_like", house.add_like, methods=["POST"])
     app.add_url_rule("/add-dislike", "add_dislike", house.add_dislike, methods=["POST"])
+    app.add_url_rule("/restore-houses", "restore_houses", house.restore_houses)
 
     # User routes
     app.add_url_rule("/user-register", "user_register", user.register)

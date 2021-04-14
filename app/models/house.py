@@ -297,3 +297,27 @@ class House(object):
         conn.commit()
 
         return True
+
+    
+    @classmethod
+    def restore_houses(cls, conn):
+        instructions = []
+        instructions.append("""
+            UPDATE houses
+            SET deleted_at=NULL, likes=0, dislikes=0, stars=0
+            WHERE id IN (1,2,3,4)
+        """)
+        instructions.append("""
+            DELETE FROM houses
+            WHERE id NOT IN (1,2,3,4)
+        """)
+        instructions.append("DELETE FROM buys")
+        instructions.append("DELETE FROM liked")
+        instructions.append("DELETE FROM disliked")
+        instructions.append("DELETE FROM has_favorites")
+        
+        cursor = conn.cursor()
+        for inst in instructions:
+            cursor.execute(inst)
+        conn.commit()
+        return True
